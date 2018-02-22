@@ -1,0 +1,31 @@
+package main
+
+import (
+	"grpc-bench/proto"
+	"testing"
+
+	"golang.org/x/net/context"
+	"log"
+	"google.golang.org/grpc"
+)
+
+func BenchmarkClient(b *testing.B) {
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+
+	conn, err := grpc.Dial("localhost:50000", opts...)
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+	defer conn.Close()
+
+	client := proto.NewLoggerClient(conn)
+	b.SetParallelism(4)
+
+	for i := 0; i < b.N; i++ {
+		_, err = client.SaveLog(context.Background(), &proto.LogData{Id: string(i), Payload: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"})
+		if err != nil {
+			log.Printf("%v.GetFeatures(_) = _, %v: \n", client, err)
+		}
+	}
+}
