@@ -9,6 +9,7 @@ How to run benchmark?
 =====================
 1. Start server `docker-compose up`
 2. Run command `go test -run=10 -bench=.`
+3. For show HAproxy stats open http://localhost:9000/haproxy_stats
 
 or
 
