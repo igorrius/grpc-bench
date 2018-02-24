@@ -1,0 +1,39 @@
+version: '3'
+services:
+
+  haproxy:
+    image: haproxy:alpine
+    volumes:
+      - ./etc/haproxy.conf:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - 50001:50001
+      - 9000:9000
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 50002:50002
+
+  app:
+    build: .
+    image: server
+
+  server1:
+    image: server
+    entrypoint: ["/bin/server"]
+    ports:
+      - 50000
+
+  server2:
+    image: server
+    entrypoint: ["/bin/server"]
+    ports:
+      - 50000
+
+  server3:
+    image: server
+    entrypoint: ["/bin/server"]
+    ports:
+      - 50000

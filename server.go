@@ -16,7 +16,7 @@ type LoggerServer struct {
 }
 
 func (l *LoggerServer) SaveLog(ctx context.Context, req *proto.LogData) (*proto.LogRes, error) {
-	//log.Printf("ID:%s\tPayload:%s\n", req.Id, req.Payload)
+	//log.Printf("%s\t", req.Id)
 	l.Counter.Inc()
 	return &proto.LogRes{}, nil
 }
@@ -26,12 +26,14 @@ func main() {
 	go func() {
 		for {
 			<-time.After(time.Second * 1)
-			fmt.Printf("\rRPC: %v sec", loggerServer.Counter.Count())
+			fmt.Printf("RPC: %v sec\n", loggerServer.Counter.Count())
 			loggerServer.Counter.Clear()
 		}
 	}()
 
-	lis, err := net.Listen("tcp", "localhost:50000")
+	serverAddress := ":50000"
+	log.Printf("Server adsress [%s]", serverAddress)
+	lis, err := net.Listen("tcp", serverAddress)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
