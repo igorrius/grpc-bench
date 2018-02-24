@@ -1,4 +1,4 @@
-How to using bench?
+How to develop bench?
 ===================
 1. Create `folder/src` and clone project from GIT to `folder/src`
 2. Run `./init-dev.sh`
